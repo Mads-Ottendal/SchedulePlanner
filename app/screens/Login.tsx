@@ -76,8 +76,10 @@ const Login = () =>{
                     {loading ? <ActivityIndicator size={"large"} color={"#0000ff"}/>
                         : <>
                             <LinearGradient
-                            colors={["purple","red","orange"]} style={{height:250, width:250}}>
-                            <Button title={"Login"} onPress={signIn}/>
+                                start={[0,1]}
+                                end={[1,0]}
+                            colors={["#65379B","#886AEA","#6457C6"]} style={darkMode.input}>
+                            <Button color={"#fefefe"} title={"Sign in"} onPress={signIn}/>
                             </LinearGradient>
                             <Button title={"Create account"}/>
                         </>}
