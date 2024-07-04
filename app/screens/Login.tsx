@@ -2,27 +2,57 @@
 import {
     View,
     StyleSheet,
-    TextInput,
     ActivityIndicator,
     Button,
-    KeyboardAvoidingView
+    KeyboardAvoidingView, Text
 } from "react-native";
-import React, {useState} from 'react';
-import {createUserWithEmailAndPassword, signInWithEmailAndPassword} from "@firebase/auth";
-import {FIREBASE_AUTH} from "../../FirebaseConfig";
+import { TextInput } from 'react-native-paper';
+import React, {useEffect, useState} from 'react';
+import {
+    signInWithEmailAndPassword,
+} from "@firebase/auth";
+import {FIREBASE_AUTH, DB} from "../../FirebaseConfig";
+import {setDoc, doc } from "firebase/firestore"
+import {SafeAreaView} from "react-native-safe-area-context";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+
+import { Dimensions, Platform, PixelRatio } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+
+const {
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
+} = Dimensions.get('window');
+
+// based on iphone 5s's scale
+const scale = SCREEN_WIDTH / 320;
+
+export function normalize(size) {
+    const newSize = size * scale
+    if (Platform.OS === 'ios') {
+        return Math.round(PixelRatio.roundToNearestPixel(newSize))
+    } else {
+        return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
+    }
+}
+
+export const shadedGray = "#7d7e7f"
 
 const Login = () =>{
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [fname, setFname] = useState("");
     const [loading, setLoading] = useState(false)
     const auth = FIREBASE_AUTH;
+    const db = DB
 
 
-
-    const signIn = async () =>{
+    const signIn = async (e) =>{
+        e.preventDefault()
         setLoading(true);
         try {
             const response = await signInWithEmailAndPassword(auth, email, password);
+
             console.log(response);
         }catch (error: any){
             console.log(error)
@@ -33,33 +63,28 @@ const Login = () =>{
         }
     }
 
-    const signUp = async  () => {
-        setLoading(true);
-        try {
-            const response = await createUserWithEmailAndPassword(auth, email, password);
-            console.log(response);
-            alert("User created!")
-        }catch (error: any){
-            console.log(error);
-            alert("Registration failed " + error.message)
-        }
-        finally {
-            setLoading(false);
-        }
-    }
+
+
 
     return (
-        <View style={darkMode.container}>
-            <KeyboardAvoidingView behavior={"padding"}>
-                <TextInput value={email} style={darkMode.input} placeholder={"Email"} autoCapitalize={"none"} onChangeText={(text) => setEmail(text)}></TextInput>
-                <TextInput secureTextEntry={true} value={password} style={darkMode.input} placeholder={"password"} autoCapitalize={"none"} onChangeText={(text) => setPassword(text)}></TextInput>
-                {loading ? <ActivityIndicator size={"large"} color={"#0000ff"}/>
-                    : <>
-                        <Button title={"Login"} onPress={signIn}/>
-                        <Button title={"Create account"} onPress={signUp}/>
-                    </>}
+        <SafeAreaView style={darkMode.container}>
+            <KeyboardAvoidingView behavior={"padding"} style={{height:"100%"}}>
+                <View style={darkMode.inputContainer}>
+                    <Text style={darkMode.signIn}>Sign in</Text>
+                    <Text style={darkMode.infoText}>Email</Text>
+                    <TextInput value={email} style={darkMode.input} placeholder={"Email"} autoCapitalize={"none"} placeholderTextColor={shadedGray} onChangeText={(text) => setEmail(text)} textColor={shadedGray} selectionColor={"rebeccapurple"} underlineStyle={{display:"none"}}></TextInput>
+                    <Text style={darkMode.infoText}>Password</Text>
+                    <TextInput secureTextEntry={true} value={password} style={darkMode.input} placeholder={"Password"} autoCapitalize={"none"} placeholderTextColor={shadedGray} onChangeText={(text) => setPassword(text)} right={<TextInput.Icon icon="eye"/>} textColor={shadedGray} selectionColor={"rebeccapurple"} underlineStyle={{display:"none"}}></TextInput>
+                    {loading ? <ActivityIndicator size={"large"} color={"#0000ff"}/>
+                        : <>
+                            <LinearGradient colors={["#65379B", "#886AEA","#6457C6"]}>
+                                <Button title={"Login"} onPress={signIn}/>
+                            </LinearGradient>
+                            <Button title={"Create account"}/>
+                        </>}
+                </View>
             </KeyboardAvoidingView>
-        </View>
+        </SafeAreaView>
     );
 };
 
@@ -67,16 +92,42 @@ export default Login
 
 const darkMode = StyleSheet.create({
     container:{
-        marginHorizontal:20,
         flex:1,
-        justifyContent: "center"
+        justifyContent: "center",
+        backgroundColor: "#0e1317"
+    },
+    signIn:{
+        color:"#fefefe",
+        fontSize: normalize(20),
+        fontWeight:"bold",
+        verticalAlign:"top",
+        paddingTop:normalize(35),
+        paddingBottom:normalize(25),
+
+    },
+    inputContainer:{
+        paddingLeft:normalize(10),
+        paddingRight:normalize(10)
+    },
+    infoText:{
+        color:"#fefefe",
+        fontSize: normalize(12),
+        marginBottom:normalize(4),
     },
     input:{
-        marginVertical:4,
-        height:50,
+        justifyContent:"center",
+        alignSelf:"center",
+        marginBottom:normalize(10),
+        width:"100%",
+        height:normalize(40),
         borderWidth:1,
-        borderRadius:4,
-        padding:10,
-        backgroundColor:"#fff"
+        borderColor:shadedGray,
+        borderRadius:13,
+        borderTopLeftRadius:13,
+        borderTopRightRadius:13,
+        paddingLeft:normalize(5),
+        backgroundColor:"#0e1317",
+        marginTop:normalize(3),
+
     },
 })
