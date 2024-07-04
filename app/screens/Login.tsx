@@ -14,10 +14,8 @@ import {
 import {FIREBASE_AUTH, DB} from "../../FirebaseConfig";
 import {setDoc, doc } from "firebase/firestore"
 import {SafeAreaView} from "react-native-safe-area-context";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-
+import {LinearGradient} from 'expo-linear-gradient';
 import { Dimensions, Platform, PixelRatio } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
 const {
     width: SCREEN_WIDTH,
@@ -77,8 +75,9 @@ const Login = () =>{
                     <TextInput secureTextEntry={true} value={password} style={darkMode.input} placeholder={"Password"} autoCapitalize={"none"} placeholderTextColor={shadedGray} onChangeText={(text) => setPassword(text)} right={<TextInput.Icon icon="eye"/>} textColor={shadedGray} selectionColor={"rebeccapurple"} underlineStyle={{display:"none"}}></TextInput>
                     {loading ? <ActivityIndicator size={"large"} color={"#0000ff"}/>
                         : <>
-                            <LinearGradient colors={["#65379B", "#886AEA","#6457C6"]}>
-                                <Button title={"Login"} onPress={signIn}/>
+                            <LinearGradient
+                            colors={["purple","red","orange"]} style={{height:250, width:250}}>
+                            <Button title={"Login"} onPress={signIn}/>
                             </LinearGradient>
                             <Button title={"Create account"}/>
                         </>}
