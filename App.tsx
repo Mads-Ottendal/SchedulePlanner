@@ -8,6 +8,7 @@ import List from "./app/screens/List";
 import Details from "./app/screens/Details";
 import Login from "./app/screens/Login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CreateAccount from "./app/screens/CreateAccount";
 
 const Stack = createNativeStackNavigator();
 
@@ -41,6 +42,7 @@ export default function App(){
                 ):(
                     <Stack.Screen name='Login' component={Login} options={{headerShown: false}}/>
                 )}
+                <Stack.Screen name={"CreateAccount"} component={CreateAccount} options={{headerShown:false}}/>
             </Stack.Navigator>
         </NavigationContainer>
     );
