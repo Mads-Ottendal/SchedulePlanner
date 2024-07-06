@@ -1,0 +1,11 @@
+CALENDAR
+
+ * Make the background for how the calendar part should look
+ * Make the screen where you choose the data to be used/the event creation screen
+ * Make the representation of the event to be shown in the calendar
+
+ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ NOTES
+
+* Make an area where you can write.
+ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

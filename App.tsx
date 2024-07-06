@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from "react-native";
+import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {NavigationContainer} from "@react-navigation/native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {useEffect, useState} from "react";
@@ -9,6 +9,10 @@ import Details from "./app/screens/Details";
 import Login from "./app/screens/Login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CreateAccount from "./app/screens/CreateAccount";
+import Calendar from "./app/screens/Calendar";
+import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
+import {Button} from "react-native-paper";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -17,7 +21,11 @@ const InsideStack = createNativeStackNavigator();
 function InsideLayout(){
     return(
         <InsideStack.Navigator>
-            <InsideStack.Screen name={"My todos"} component={List}/>
+            <InsideStack.Screen name={"Calendar"} component={Calendar} options={{headerRight: () => (
+                    <TouchableOpacity>
+                        <Button icon={"plus"}/>
+                    </TouchableOpacity>
+                )}}/>
             <InsideStack.Screen name={"Details"} component={Details}/>
         </InsideStack.Navigator>
     );
