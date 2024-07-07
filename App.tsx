@@ -9,10 +9,10 @@ import Details from "./app/screens/Details";
 import Login from "./app/screens/Login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CreateAccount from "./app/screens/CreateAccount";
-import Calendar from "./app/screens/Calendar";
+
 import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
 import {Button} from "react-native-paper";
-
+import {Calendar, createNewEvent} from "./app/screens/Calendar";
 
 const Stack = createNativeStackNavigator();
 
