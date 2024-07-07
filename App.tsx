@@ -1,7 +1,7 @@
-import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Appearance, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {NavigationContainer} from "@react-navigation/native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {browserLocalPersistence, onAuthStateChanged, setPersistence, User} from "@firebase/auth";
 import {FIREBASE_AUTH} from "./FirebaseConfig";
 import List from "./app/screens/List";
@@ -9,23 +9,40 @@ import Details from "./app/screens/Details";
 import Login from "./app/screens/Login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CreateAccount from "./app/screens/CreateAccount";
-
-import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
 import {Button} from "react-native-paper";
-import {Calendar, createNewEvent} from "./app/screens/Calendar";
+import {Calendar} from "./app/screens/Calendar";
 
 const Stack = createNativeStackNavigator();
 
 const InsideStack = createNativeStackNavigator();
 
+
+
+
+
+
+
+
+
 function InsideLayout(){
+    const [colorScheme, setColorScheme] = React.useState(
+        Appearance.getColorScheme(),
+    );
+
+    useEffect(() => {
+        Appearance.addChangeListener(({colorScheme}) => setColorScheme(colorScheme));
+        console.log(colorScheme)
+    }, []);
+
+    const isDarkmode = colorScheme === 'dark';
+
     return(
         <InsideStack.Navigator>
             <InsideStack.Screen name={"Calendar"} component={Calendar} options={{headerRight: () => (
                     <TouchableOpacity>
-                        <Button icon={"plus"}/>
+                        <Button icon={"plus"} textColor={isDarkmode ? "#886AEA" : "#27AAFF"}/>
                     </TouchableOpacity>
-                )}}/>
+                ), headerTitle:"", headerStyle:{backgroundColor:"#010108"}}}/>
             <InsideStack.Screen name={"Details"} component={Details}/>
         </InsideStack.Navigator>
     );

@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {View, TouchableOpacity, Text, Alert} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, TouchableOpacity, Text, Alert, StyleSheet, Appearance} from 'react-native';
 import {
     CalendarProvider,
     ExpandableCalendar,
@@ -8,13 +8,14 @@ import {
     TimelineList,
     TimelineProps
 } from 'react-native-calendars';
-import {Card} from 'react-native-paper';
+import {Card, useTheme} from 'react-native-paper';
 import {CalendarUtils} from "react-native-calendars/src";
 import groupBy from "lodash";
 import find from "lodash";
 import filter from "lodash";
-import {timelineEvents} from "../../mocks/timelineEvents";
+import {getDate, timelineEvents} from "../../mocks/timelineEvents";
 import {SafeAreaView} from "react-native-safe-area-context";
+import {backgroundColor} from "react-native-calendars/src/style";
 
 const INITIAL_TIME = {hour: 9, minutes: 0};
 const EVENTS: TimelineEventProps[] = timelineEvents;
@@ -34,11 +35,37 @@ export const Calendar = () => {
 
 
 
+const [date, setDate] = useState(ptoday)
+
+    function getDate(){
+        return date;
+    }
+
+
+    const state = {
+        currentDate: getDate(),
+        events: EVENTS,
+        eventsByDate: groupBy(EVENTS, e => CalendarUtils.getCalendarDateString(e.start)) as {
+            [key: string]: TimelineEventProps[];
+        }
+    };
+
+    const [colorScheme, setColorScheme] = React.useState(
+
+        Appearance.getColorScheme(),
+    );
+
+    useEffect(() => {
+        Appearance.addChangeListener(({colorScheme}) => setColorScheme(colorScheme));
+    }, []);
+
+    const isDarkmode = colorScheme === 'dark';
+
 
 
     const onDateChanged = (date: string, source: string) => {
         console.log('TimelineCalendarScreen onDateChanged: ', date, source);
-        this.setState({currentDate: date});
+        setDate(date);
     };
 
     const onMonthChange = (month: any, updateSource: any) => {
@@ -47,8 +74,6 @@ export const Calendar = () => {
 
     const timelineProps: Partial<TimelineProps> = {
         format24h: true,
-        onBackgroundLongPress: this.createNewEvent,
-        onBackgroundLongPressOut: this.approveNewEvent,
         scrollToFirst: true,
         start: 0,
         end: 24,
@@ -56,6 +81,7 @@ export const Calendar = () => {
         overlapEventsSpacing: 8,
         rightEdgeSpacing: 24,
     };
+
 
 
     return (
@@ -71,7 +97,11 @@ export const Calendar = () => {
                 firstDay={1}
                 leftArrowImageSource={require('/Users/madsottendal/SchedulePlanner/img/previous.png')}
                 rightArrowImageSource={require('/Users/madsottendal/SchedulePlanner/img/next.png')}
-                markedDates={this.marked}
+                theme={{
+                    calendarBackground: isDarkmode ? "blue" : "purple",
+                    selectedDayBackgroundColor: isDarkmode ? "orange" : "red"
+
+                }}
             />
             <TimelineList
                 events={EVENTS}
@@ -84,3 +114,4 @@ export const Calendar = () => {
         </CalendarProvider>
     );
 }
+

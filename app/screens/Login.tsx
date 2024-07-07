@@ -54,8 +54,11 @@ const Login = () =>{
     const auth = FIREBASE_AUTH;
     const [secureTextEntry, setSecureTextEntry] = useState(true);
 
-    const [colorScheme, setColorScheme] = React.useState(
 
+
+
+
+    const [colorScheme, setColorScheme] = React.useState(
         Appearance.getColorScheme(),
     );
 
