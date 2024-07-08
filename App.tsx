@@ -6,17 +6,15 @@ import {browserLocalPersistence, onAuthStateChanged, setPersistence, User} from 
 import {FIREBASE_AUTH} from "./FirebaseConfig";
 import List from "./app/screens/List";
 import Details from "./app/screens/Details";
-import Login from "./app/screens/Login";
+import Login, {normalize} from "./app/screens/Login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CreateAccount from "./app/screens/CreateAccount";
-import {Button} from "react-native-paper";
 import {Calendar} from "./app/screens/Calendar";
+import {Button, Icon} from "@rneui/themed"
 
 const Stack = createNativeStackNavigator();
 
 const InsideStack = createNativeStackNavigator();
-
-
 
 
 
@@ -39,10 +37,17 @@ function InsideLayout(){
     return(
         <InsideStack.Navigator>
             <InsideStack.Screen name={"Calendar"} component={Calendar} options={{headerRight: () => (
-                    <TouchableOpacity>
-                        <Button icon={"plus"} textColor={isDarkmode ? "#886AEA" : "#27AAFF"}/>
+                    <TouchableOpacity onPress={() => {
+                        alert("Implement create new event")
+                    }}>
+                        <Icon
+                            name={"add-outline"}
+                            type={"ionicon"}
+                            color={isDarkmode ? "#886AEA" : "#27AAFF"}
+                            size={normalize(25)}
+                        />
                     </TouchableOpacity>
-                ), headerTitle:"", headerStyle:{backgroundColor:"#010108"}}}/>
+                ), headerTitle:"", headerStyle:{backgroundColor: isDarkmode ? "#010108" : "#fefefe"}}}/>
             <InsideStack.Screen name={"Details"} component={Details}/>
         </InsideStack.Navigator>
     );
@@ -59,15 +64,39 @@ export default function App(){
         });
     },[]);
 
+
+    const [colorScheme, setColorScheme] = React.useState(
+        Appearance.getColorScheme(),
+    );
+
+    useEffect(() => {
+        Appearance.addChangeListener(({colorScheme}) => setColorScheme(colorScheme));
+        console.log(colorScheme)
+    }, []);
+
+    const isDarkmode = colorScheme === 'dark';
+
     return(
         <NavigationContainer>
-            <Stack.Navigator initialRouteName='Login'>
+            <Stack.Navigator initialRouteName='Calendar'>
                 {user ? (
                     <Stack.Screen name='Inside' component={InsideLayout} options={{headerShown: false}}/>
                 ):(
                     <Stack.Screen name='Login' component={Login} options={{headerShown: false}}/>
                 )}
                 <Stack.Screen name={"CreateAccount"} component={CreateAccount} options={{headerShown:false}}/>
+                <InsideStack.Screen name={"Calendar"} component={Calendar} options={{headerRight: () => (
+                        <TouchableOpacity onPress={() => {
+                            alert("Implement create new event")
+                        }}>
+                            <Icon
+                                name={"add-outline"}
+                                type={"ionicon"}
+                                color={isDarkmode ? "#886AEA" : "#27AAFF"}
+                                size={normalize(25)}
+                            />
+                        </TouchableOpacity>
+                    ), headerTitle:"", headerStyle:{backgroundColor: isDarkmode ? "#0e1317" : "#fefefe"}}}/>
             </Stack.Navigator>
         </NavigationContainer>
     );

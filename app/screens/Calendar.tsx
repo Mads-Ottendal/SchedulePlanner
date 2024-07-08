@@ -74,12 +74,12 @@ const [date, setDate] = useState(ptoday)
 
     const timelineProps: Partial<TimelineProps> = {
         format24h: true,
-        scrollToFirst: true,
+        scrollToNow:true,
         start: 0,
         end: 24,
-        unavailableHours: [{start: 0, end: 6}, {start: 22, end: 24}],
         overlapEventsSpacing: 8,
         rightEdgeSpacing: 24,
+
     };
 
 
@@ -91,17 +91,26 @@ const [date, setDate] = useState(ptoday)
             onMonthChange={onMonthChange}
             showTodayButton
             disabledOpacity={0.6}
-            // numberOfDays={3}
+            style={{backfaceVisibility:"hidden"}}
+
         >
             <ExpandableCalendar
                 firstDay={1}
                 leftArrowImageSource={require('/Users/madsottendal/SchedulePlanner/img/previous.png')}
                 rightArrowImageSource={require('/Users/madsottendal/SchedulePlanner/img/next.png')}
                 theme={{
-                    calendarBackground: isDarkmode ? "blue" : "purple",
-                    selectedDayBackgroundColor: isDarkmode ? "orange" : "red"
-
+                    calendarBackground: isDarkmode ? "#0e1317" : "#fefefe",
+                    selectedDayBackgroundColor: isDarkmode ? "#886AEA" : "#27AAFF",
+                    textDayStyle: {color: isDarkmode ? "#fefefe" : "#010101"},
+                    arrowColor: isDarkmode ? "#886AEA" : "#27AAFF",
+                    monthTextColor: isDarkmode ? "#886AEA" : "#27AAFF",
+                    textMonthFontWeight: "500",
+                    selectedDayTextColor:isDarkmode ? "#fefefe" : "#010101",
+                    textSectionTitleColor:isDarkmode ? "#fefefe" : "#010101",
+                    todayTextColor:isDarkmode ? "#fefefe" : "#010101",
                 }}
+
+
             />
             <TimelineList
                 events={EVENTS}
@@ -111,6 +120,7 @@ const [date, setDate] = useState(ptoday)
                 scrollToFirst
                 initialTime={INITIAL_TIME}
             />
+
         </CalendarProvider>
     );
 }
