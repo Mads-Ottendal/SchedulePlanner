@@ -16,6 +16,9 @@ import filter from "lodash";
 import {getDate, timelineEvents} from "../../mocks/timelineEvents";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {backgroundColor} from "react-native-calendars/src/style";
+import * as CalendarEvent from 'react-native-add-calendar-event';
+import moment from "moment"
+
 
 const INITIAL_TIME = {hour: 9, minutes: 0};
 const EVENTS: TimelineEventProps[] = timelineEvents;
@@ -28,7 +31,44 @@ const year    = dateObj.getUTCFullYear();
 const pMonth        = month.toString().padStart(2,"0");
 const pDay          = day.toString().padStart(2,"0");
 
+const pHour        = dateObj.getHours().toString().padStart(2,"0");
+const pSecond          = dateObj.getSeconds().toString().padStart(2,"0");
+
 const ptoday = year + "-" + pMonth + "-" + pDay;
+
+const pTimeNow = pHour + "-" + pSecond
+
+
+const EVENT_TITLE = "Lunch"
+const TIME_NOW_IN_UTC = moment.utc()
+
+const utcDateToString = momentInUTC => {
+    let formattedDate = moment.utc(momentInUTC).format('YYYY-MM-DDTHH:MM:ss.SSS[Z]')
+    return formattedDate
+}
+
+const addEventToCalendar = (title, startDateTime) => {
+    const eventConfig = {
+        title,
+        startDate: utcDateToString(startDateTime),
+        endDate: utcDateToString(moment.utc(startDateTime).add(1,'hours')),
+        notes: "Testing stuff",
+        navigationBarIOS:{
+            tintColor:"orange",
+            backgroundColor:"green",
+            title:"blue",
+        },
+    };
+
+    CalendarEvent.presentEventCreatingDialog(eventConfig).then(eventInfo =>{
+        Alert.alert("Event added", JSON.stringify(eventInfo));
+    }).catch(error =>{
+        Alert.alert("error:", `failed to add event:  ${error}`);
+    });
+};
+
+
+
 
 
 export const Calendar = () => {
@@ -91,7 +131,6 @@ const [date, setDate] = useState(ptoday)
             onMonthChange={onMonthChange}
             showTodayButton
             disabledOpacity={0.6}
-            style={{backfaceVisibility:"hidden"}}
 
         >
             <ExpandableCalendar
@@ -119,6 +158,7 @@ const [date, setDate] = useState(ptoday)
                 scrollToNow
                 scrollToFirst
                 initialTime={INITIAL_TIME}
+
             />
 
         </CalendarProvider>
