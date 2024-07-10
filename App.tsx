@@ -11,13 +11,36 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import CreateAccount from "./app/screens/CreateAccount";
 import {Calendar} from "./app/screens/Calendar";
 import {Button, Icon} from "@rneui/themed"
-
+import CalendarTest from "./app/screens/CalendarTest";
+import {CreateTask, Home} from "./app/calendarScreens";
 const Stack = createNativeStackNavigator();
 
 const InsideStack = createNativeStackNavigator();
 
+const CalendarStack = createNativeStackNavigator();
 
 
+
+function CalendarNavigation() {
+    const [colorScheme, setColorScheme] = React.useState(
+        Appearance.getColorScheme(),
+    );
+
+    useEffect(() => {
+        Appearance.addChangeListener(({colorScheme}) => setColorScheme(colorScheme));
+        console.log(colorScheme)
+    }, []);
+
+    const isDarkmode = colorScheme === 'dark';
+
+    return (
+        <CalendarStack.Navigator>
+            <CalendarStack.Screen component={Home} name={"home"} options={{headerShown:false}}/>
+            <CalendarStack.Screen component={CreateTask} name={'CreateTask'} options={{headerShown:false}}/>
+        </CalendarStack.Navigator>
+    );
+
+}
 
 
 
@@ -36,18 +59,6 @@ function InsideLayout(){
 
     return(
         <InsideStack.Navigator>
-            <InsideStack.Screen name={"Calendar"} component={Calendar} options={{headerRight: () => (
-                    <TouchableOpacity onPress={() => {
-                        alert("Implement create new event")
-                    }}>
-                        <Icon
-                            name={"add-outline"}
-                            type={"ionicon"}
-                            color={isDarkmode ? "#886AEA" : "#27AAFF"}
-                            size={normalize(25)}
-                        />
-                    </TouchableOpacity>
-                ), headerTitle:"", headerStyle:{backgroundColor: isDarkmode ? "#010108" : "#fefefe"}}}/>
             <InsideStack.Screen name={"Details"} component={Details}/>
         </InsideStack.Navigator>
     );
@@ -78,14 +89,14 @@ export default function App(){
 
     return(
         <NavigationContainer>
-            <Stack.Navigator initialRouteName='Calendar'>
+            <Stack.Navigator initialRouteName='Login'>
                 {user ? (
                     <Stack.Screen name='Inside' component={InsideLayout} options={{headerShown: false}}/>
                 ):(
                     <Stack.Screen name='Login' component={Login} options={{headerShown: false}}/>
                 )}
                 <Stack.Screen name={"CreateAccount"} component={CreateAccount} options={{headerShown:false}}/>
-                <InsideStack.Screen name={"Calendar"} component={Calendar} options={{headerRight: () => (
+                <Stack.Screen name={"Calendar"} component={CalendarNavigation} options={{headerShown:false, headerRight: () => (
                         <TouchableOpacity onPress={() => {
                             alert("Implement create new event")
                         }}>
