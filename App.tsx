@@ -9,10 +9,9 @@ import Details from "./app/screens/Details";
 import Login, {normalize} from "./app/screens/Login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CreateAccount from "./app/screens/CreateAccount";
-import {Calendar} from "./app/screens/Calendar";
 import {Button, Icon} from "@rneui/themed"
-import CalendarTest from "./app/screens/CalendarTest";
 import {CreateTask, Home} from "./app/calendarScreens";
+import Calendar from "./app/screens/Calendar";
 const Stack = createNativeStackNavigator();
 
 const InsideStack = createNativeStackNavigator();
@@ -89,14 +88,14 @@ export default function App(){
 
     return(
         <NavigationContainer>
-            <Stack.Navigator initialRouteName='Login'>
+            <Stack.Navigator initialRouteName='Calendar'>
                 {user ? (
                     <Stack.Screen name='Inside' component={InsideLayout} options={{headerShown: false}}/>
                 ):(
                     <Stack.Screen name='Login' component={Login} options={{headerShown: false}}/>
                 )}
                 <Stack.Screen name={"CreateAccount"} component={CreateAccount} options={{headerShown:false}}/>
-                <Stack.Screen name={"Calendar"} component={CalendarNavigation} options={{headerShown:false, headerRight: () => (
+                <Stack.Screen name={"Calendar"} component={Calendar} options={{headerShown:false, headerRight: () => (
                         <TouchableOpacity onPress={() => {
                             alert("Implement create new event")
                         }}>
