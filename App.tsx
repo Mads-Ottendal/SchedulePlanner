@@ -9,14 +9,21 @@ import Details from "./app/screens/Details";
 import Login, {normalize} from "./app/screens/Login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CreateAccount from "./app/screens/CreateAccount";
-import {Button, Icon} from "@rneui/themed"
+import {Button, ButtonGroup, Icon} from "@rneui/themed"
 import {CreateTask, Home} from "./app/calendarScreens";
 import Calendar from "./app/screens/Calendar";
+import ToggleSwitch from 'rn-toggle-switch'
+
 const Stack = createNativeStackNavigator();
 
 const InsideStack = createNativeStackNavigator();
 
 const CalendarStack = createNativeStackNavigator();
+
+
+
+
+
 
 
 
@@ -86,6 +93,8 @@ export default function App(){
 
     const isDarkmode = colorScheme === 'dark';
 
+    const [isWeekToggled, setIsWeekToggled] = useState(true)
+
     return(
         <NavigationContainer>
             <Stack.Navigator initialRouteName='Calendar'>
@@ -95,18 +104,7 @@ export default function App(){
                     <Stack.Screen name='Login' component={Login} options={{headerShown: false}}/>
                 )}
                 <Stack.Screen name={"CreateAccount"} component={CreateAccount} options={{headerShown:false}}/>
-                <Stack.Screen name={"Calendar"} component={Calendar} options={{headerShown:false, headerRight: () => (
-                        <TouchableOpacity onPress={() => {
-                            alert("Implement create new event")
-                        }}>
-                            <Icon
-                                name={"add-outline"}
-                                type={"ionicon"}
-                                color={isDarkmode ? "#886AEA" : "#27AAFF"}
-                                size={normalize(25)}
-                            />
-                        </TouchableOpacity>
-                    ), headerTitle:"", headerStyle:{backgroundColor: isDarkmode ? "#0e1317" : "#fefefe"}}}/>
+                <Stack.Screen name={"Calendar"} component={Calendar} options={{headerShown:false}}/>
             </Stack.Navigator>
         </NavigationContainer>
     );
