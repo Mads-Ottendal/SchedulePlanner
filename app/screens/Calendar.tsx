@@ -2,16 +2,13 @@ import dayjs from 'dayjs';
 import * as React from 'react';
 import {StyleSheet, View, Text, Dimensions, Appearance, TouchableOpacity} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-
 import {useEffect, useState} from 'react';
 import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group';
-import FAB from 'react-native-fab';
 import Schedule from "f-react-native-schedule";
+import { FAB } from 'react-native-paper';
 import {ScheduleView} from "f-react-native-schedule/lib/typescript/types";
-import ToggleSwitch from "rn-toggle-switch";
+import DateTimePicker from "react-native-modal-datetime-picker";
 import {Icon} from "@rneui/themed";
-import {normalize} from "./Login";
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -25,12 +22,25 @@ const dates = [
     dayjs().add(4, 'day').subtract(6, 'hour'),
 ];
 
+dates.forEach(d => console.log(d.add(1,'hour').format('YYYY-MM-DD HH:mm:ss')))
 const schedules = dates.map((date) => ({
     id: date.day(),
-    subject: `scheduling ${date.day()}`,
-    start_time: date.format('YYYY-MM-DD HH:mm:ss'),
-    end_time: date.add(1, 'hour').format('YYYY-MM-DD HH:mm:ss'),
+    subject: `Do this`,
+    start_time: '2024-07-12 12:30:00',
+    end_time: '2024-07-12 14:55:00',
 }));
+
+const events = [
+    {
+        id: 42,
+        subject: `Do this`,
+        start_time: '2024-07-12 13:25:00',
+        end_time: '2024-07-12 13:55:00',
+
+    },
+]
+
+
 
 const typeOfViewOptions: RadioButtonProps[] = [
     {
@@ -48,9 +58,22 @@ const typeOfViewOptions: RadioButtonProps[] = [
 
 
 export default function Calendar() {
+    const [date, setDate] = useState(new Date());
+
+    const [radioButtons, setRadioButtons] = useState(typeOfViewOptions);
+    const [currentView, setCurrentView] = useState<ScheduleView>('week');
+
+
+
+
+
     const [colorScheme, setColorScheme] = React.useState(
         Appearance.getColorScheme(),
     );
+
+
+
+
 
     useEffect(() => {
         Appearance.addChangeListener(({colorScheme}) => setColorScheme(colorScheme));
@@ -60,44 +83,63 @@ export default function Calendar() {
     const isDarkmode = colorScheme === 'dark';
 
 
-    return (
-        <View style={{flex:1, backgroundColor: isDarkmode ? "#0e1317" : "#fefefe", paddingTop:normalize(30)}}>
-            <View style={{flex:0.1, backgroundColor: isDarkmode ? "#0e1317" : "#fefefe", flexDirection:"row", alignItems:"center", justifyContent:"space-between", marginLeft:20, marginRight:10}}>
-                <ToggleSwitch
-                    text={{on:"week", off:"day"}}
-                    textStyle={{fontWeight: 'bold'}}
-                    color={{ indicator: 'white', active: 'rgba(32, 193, 173, 1)', inactive:  'rgba( 247, 247, 247, 1)', activeBorder: '#41B4A4', inactiveBorder: '#E9E9E9'}}
-                    active={true}
-                    disabled={false}
-                    width={35}
-                    radius={10}
-                    onValueChange={() =>{
 
-                    }}
-                />
-                <TouchableOpacity onPress={() => {
-                    alert("Implement create new event")
-                }}>
-                    <Icon
-                        name={"add-outline"}
-                        type={"ionicon"}
-                        color={isDarkmode ? "#886AEA" : "#27AAFF"}
-                        size={normalize(25)}
+
+
+
+
+
+    return (
+        <SafeAreaView style={styles.container}>
+            <View style={styles.container}>
+                <View style={{ padding: 8, width: '100%' }}>
+                    <Text>Selected Date</Text>
+                    <DateTimePicker
+                        style={{ width: '100%', marginBottom: 8, height:20, backgroundColor:"green" }}
+                        date={date}
+                        placeholder="select date"
+                        onCancel={() => console.log("cancelled")}
+                        onConfirm={setDate}/>
+
+                    <Text>Type of View</Text>
+                    <RadioGroup
+                        containerStyle={{ marginBottom: 8 }}
+                        radioButtons={radioButtons}
+                        onPress={() => console.log("nothing")}
+                        layout="row"
                     />
-                </TouchableOpacity>
+                </View>
+
+                <Schedule
+                    schedules={schedules}
+                    selectedDate={date}
+                    currentView={'week'}
+                />
+                <FAB
+                    color={"red"}
+                    visible={true}
+                    onPress={() => console.log("FAB pressed")}
+
+                >
+                    <Icon
+
+                    ></Icon>
+                </FAB>
             </View>
-            <Schedule
-                style={{height:windowHeight}}
-                currentView={"week"}
-                startHour={"00:00"}
-                cellDimensions={{width:(windowWidth-80)/7}}
-            />
-        </View>
+        </SafeAreaView>
     );
 }
 
-const styles = StyleSheet.create({
 
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    box: {
+        width: 60,
+        height: 60,
+        marginVertical: 20,
+    },
 });
 
 export default Calendar;
